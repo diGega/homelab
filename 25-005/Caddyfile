@@ -1,0 +1,4 @@
+local-digega {
+  proxy http://ollama:11434
+  tls internal
+}

@@ -1,0 +1,23 @@
+services:
+  ollama:
+    image: ollama/ollama
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
+    ports:
+      - 11434:11434/tcp
+      - 11434:11434/udp
+    networks:
+      - ollama-net
+
+volumes:
+  ollama:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOME}/docker-volumes/ollama
+
+networks:
+  ollama-net:
+    driver: bridge

@@ -1,0 +1,62 @@
+services:
+  caddy:
+    image: ghcr.io/caddybuilds/caddy-cloudflare:latest
+    restart: unless-stopped
+    volumes:
+      - caddy-config:/etc/caddy
+    cap_add:
+      - NET_ADMIN
+    ports:
+      - 80:80/tcp
+      - 443:443/tcp
+      - 443:443/udp
+    environment:
+      - CLOUDFLARE_API_TOKEN=REPLACE_STRING_WITH_CLOUDFLARE_API_TOKEN
+    depends_on:
+      - open-webui
+    networks:
+      - ollama-net
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    restart: always
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+    volumes:
+      - open-webui:/app/backend/data
+    depends_on:
+      - ollama
+    networks:
+      - ollama-net
+  
+  ollama:
+    image: ollama/ollama
+    restart: unless-stopped
+    volumes:
+      - ollama:/root/.ollama
+    networks:
+      - ollama-net
+
+volumes:
+  caddy-config:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOME}/docker-volumes/caddy-config
+  open-webui:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOME}/docker-volumes/open-webui
+  ollama:
+    driver: local
+    driver_opts:
+      o: bind
+      type: none
+      device: ${HOME}/docker-volumes/ollama
+
+networks:
+  ollama-net:
+    driver: bridge

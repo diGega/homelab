@@ -1,0 +1,1 @@
+docker compose -f caddy-openwebui-ollama-webdev.yaml up -d
