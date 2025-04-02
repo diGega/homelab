@@ -1,4 +1,4 @@
 local-digega {
-  proxy http://ollama:11434
+  reverse_proxy http://open-webui:8080
   tls internal
 }
